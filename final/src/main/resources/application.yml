@@ -1,0 +1,61 @@
+spring:
+ application:
+  name: final
+ mvc:  # jsp 파일 경로 강제 설정. 권장 X, templates 경로 사용 (with 타임리프 권장)
+  view:
+   prefix: /WEB-INF/views/
+   suffix: .jsp
+ datasource: # DB 정보 설정
+  url: jdbc:mysql://localhost:3306/fullstackdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+  username: fullstack  # 본인 DB USER명으로 변경필요
+  password: fullstack  # 본인 DB PASSWORD명으로 변경필요
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  connection-test-query: SELECT NOW() FROM dual
+  hikari: # 로그백 쿼리 로깅 설정
+   driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+   jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/fullstackdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+ security:
+  user:
+   name: user
+   password: user
+   
+# 포트 설정
+server: 
+  port: 8080
+  
+# mybatis 설정
+mybatis:
+  configuration:
+    default-statement-timeout: 20 # 쿼리 실행 타임아웃 20초로 제한
+    multiple-result-sets-enabled: false # 다중 행 결과 리턴 금지 (무결성 에러 체크 힘들어짐 조금이나마 방지)
+    map-underscore-to-camel-case: true # DB 컬럼명(소문자스네이크케이스) - 자바 변수명(카멜케이스) 자동 매핑
+    call-setters-on-nulls: true # NULL값 setter에 전달 가능 (defualt: false)
+    # jdbc-type-for-null: varchar # NULL값 DB에 저장시, "NULL" 이라는 varchar 형태로 저장 NOT NULL 컬럼 insert 실패 방지 ###### mysql auto_pk trigger 추가로 인해 주석처리함 (PK를 NULL로 저장해야 됨)
+    default-fetch-size: 0 # 한 번에 가져올 최대 행 수 제한 (default: 0)
+  # config-location: classpath:mybatis/mybatis-config.xml # mybatis 설정파일 경로 지정
+  mapper-locations: classpath:/mapper/*-mapping.xml
+  type-aliases-package: com.multi.mini.dto # dto있는 패키지 별칭 자동 지정(ex. **/MemberDTO => MemberDTO)
+  
+# 기본 로깅 레벨 설정
+logging:
+  level:
+    # root: INFO
+    org:
+      apache:
+        ibatis: DEBUG
+      mybatis: DEBUG
+    com:
+      multi: DEBUG
+      zaxxer:
+        hikari: INFO
+    javax:
+      sql:
+        DataSource: OFF
+    jdbc: # 쿼리 로그 설정
+      audit: OFF # JDBC 트러블슈팅 경우를 제외하고는 사용 권장 X
+      resultset: OFF # ResultSet을 포함한 모든 JDBC 호출 정보를 출력
+      resultsettable: INFO  # SQL 결과 데이터 Table형식으로 출력
+      sqlonly: OFF     # SQL 로그만 출력
+      sqltiming: INFO    # SQL + 소요시간 출력
+      connection : OFF  # 커넥션 연결/종료 정보 출력
+      
