@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.TestDTO;
-import com.example.demo.mapper.testMapper;
+import com.example.demo.mapper.TestMapper;
 
 @Service
 public class testService {
     @Autowired
-    private testMapper mapper;
+    private TestMapper mapper;
 
     @Autowired
     TestDTO testDTO;

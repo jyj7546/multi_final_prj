@@ -17,7 +17,7 @@
     </appender>
 
     <!-- 기본 패키지 로깅 -->
-    <logger name="com.multi" level="DEBUG" appender-ref="console" />
+    <logger name="com.example" level="DEBUG" appender-ref="console" />
 
     <!-- 쿼리 select 테이블 형식으로 로깅 -->
     <logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog" />
