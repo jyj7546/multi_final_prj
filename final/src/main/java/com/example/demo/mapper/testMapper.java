@@ -9,6 +9,6 @@ import com.example.demo.dto.TestDTO;
 
 @Repository
 @Mapper
-public interface testMapper {
+public interface TestMapper {
     TestDTO selectTest(Map<String, Object> map);
 }
