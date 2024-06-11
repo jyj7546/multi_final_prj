@@ -1,0 +1,415 @@
+@import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
+
+body {
+  background: black;
+  
+}
+main {
+  display: flex;
+
+}
+
+
+#mainSection::-webkit-scrollbar {
+  display: none; /* 웹킷 브라우저에서 스크롤바 숨기기 */
+}
+
+
+/* feed */
+
+#mainSection {
+  flex: 1; /* 메인 섹션은 남은 공간 모두 차지 */
+  overflow-y: auto;
+  float: right;
+  -ms-overflow-style: none;  /* IE 및 Edge에서 스크롤바 숨기기 */
+}
+
+.box-feed {
+  width: 470px;
+  border-bottom: 1px solid #777777;
+  background-color: black;
+  overflow: hidden;
+  margin-top: 50px;
+  margin-left: 150px;
+}
+.head-feed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.profile-feed {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+.icon-more {
+  width: 20px;
+  height: 20px;
+  margin: 0 20px 0 0;
+}
+.userName-feed {
+  font-size: 15px;
+  font-weight: bold;
+  margin: 0 0 2px 5.5px;
+  text-decoration: none;
+  color: white;
+}
+.location-feed {
+  font-size: 12px;
+  margin: 0 0 0 10px;
+  color: #777777;
+}
+.img-feed {
+  width: 500px;
+  height: 600px;
+}
+.icon-feed {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+
+}
+.img-icon {
+  width: 26px;
+  height: 26px;
+  margin: 0 10px 0 0;
+  color: white;
+
+}
+.img-icon2 {
+  width: 35px;
+  height: 35px;
+   border-radius: 50%;
+
+  color: white;
+
+}
+.text-like {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 15px 15px 15px;
+  color: white;
+}
+.box-comment {
+  margin: 10px 0 10px 13px;
+  color: white;
+}
+.text-comment {
+  display: inline-block;
+  width: 390px;
+  margin: 0 0 5px 0;
+  font-size: 15px;
+}
+.date-comment {
+  margin: 0 0 14px 0;
+  font-size: 12px;
+  color: #E2E2E2;
+}
+.img-heart-comment:hover,
+.img-delete-comment:hover {
+  cursor: pointer;
+}
+.img-delete-comment {
+  margin: 0 0 2px 10px;
+}
+
+/* 댓글 */
+.box-chat {
+  border-top: 1px solid black;
+  display: flex;
+  align-items: center;
+  padding: 2px 15px 5px 15px;
+  color: black;
+}
+.input-chat {
+  width: 390px;
+  border: none;
+  color: #666666;
+  background-color: black;
+  
+}
+.btn-chat {
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+  color: rgb(0, 149, 246, 0.3);
+}
+.btn-chat-effect {
+  color: rgb(0, 149, 246, 1);
+}
+.btn-chat-effect:hover {
+  cursor: pointer;
+}
+
+/* follow 모달창*/
+/* 모달 배경 */
+.modal {
+  display: none; /* 초기에는 보이지 않음 */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8); /* Dark background */
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+  background-color: #1c1c1e; /* Dark content background */
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  color: #ffffff; /* White text */
+  overflow: hidden; /* Ensure content fits within bounds */
+  animation: fadeIn 0.3s;
+}
+
+/* 모달 콘텐츠 애니메이션 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 모달 헤더 */
+.modal-header {
+  padding: 15px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333; /* Slightly darker background for header */
+}
+
+/* 모달 제목 */
+.modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* 닫기 버튼 */
+.close {
+  font-size: 20px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover {
+  color: #fff;
+}
+
+/* 모달 본문 */
+.modal-body {
+  padding: 15px;
+  max-height: 300px; /* Limit height */
+  overflow-y: auto; /* Scroll if content overflows */
+}
+
+/* 받는 사람 */
+.recipient {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.recipient label {
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.recipient input {
+  flex-grow: 1;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: #2c2c2e;
+  color: #fff;
+}
+
+/* 팔로우 목록 항목 */
+.follow-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+}
+
+.follow-item:last-child {
+  border-bottom: none;
+}
+
+.follow-item img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.follow-item .follow-info {
+  flex-grow: 1;
+}
+
+.follow-item .follow-info .username {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.follow-item .follow-info .user-details {
+  font-size: 12px;
+  color: #888;
+}
+
+.follow-item .follow-checkbox {
+  margin-left: 10px;
+  width: 18px;
+  height: 18px;
+}
+
+/* 모달 바닥 */
+.modal-footer {
+  padding: 10px;
+  border-top: 1px solid #333;
+  display: flex;
+  justify-content: flex-end;
+  background-color: #333; /* Slightly darker background for footer */
+}
+
+.send-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.send-btn:hover {
+  background-color: #0056b3;
+}
+
+
+/* sidebar */
+.box-aside {
+  margin: 50px 0 0 80px;
+}
+.img-profile-32px {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+   object-fit: cover;
+}
+.box-myProfile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 320px;
+  margin: 0 0 20px 0;
+}
+.box-myProfile div {
+  display: flex;
+  align-items: center;
+}
+.box-myProfile p {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+.box-recommend {
+  width: 320px;
+  margin: 0 0 20px 0;
+}
+.box-recommend h2 {
+  color:#777777;
+  font-weight: bold;
+  font-size: 14px;
+}
+.head-recommend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 15px 0;
+}
+
+.btn-recommend-all {
+  background-color: transparent;
+  border: none;
+  color: #777777;
+  font-weight: bold;
+  font-size: 12px;
+}
+.box-recommend-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 15px 0;
+}
+.profile-recommend {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn-blue {
+  background-color: transparent;
+  border: none;
+  color: rgb(0, 149, 246);
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.userName-recommend {
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  margin: 0 0 4px 10px;
+}
+.follower-recommend {
+  font-size: 12px;
+  color: #8e8e8e;
+  margin: 0 0 0 10px;
+}
+
+/* footer */
+.footer {
+  width: 320px;
+  line-height: 18px;
+  font-size: 10px;
+  color: #c7c7c7;
+}
+.footer-info > a {
+font-size:10px;
+  margin: 0 0 20px 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* 미디어쿼리 */
+@media (max-width: 1000px) {
+  .box-aside {
+    display: none;
+  }
+  .bar-search {
+    left: 110px;
+  }
+}
+@media (max-width: 800px) {
+  .bar-search input {
+    width: 200px;
+  }
+}
+
+@media (max-width: 760px) {
+  .bar-search {
+    display: none;
+  }
+  .list-nav {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+  }
+}

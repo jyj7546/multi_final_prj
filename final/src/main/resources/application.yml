@@ -18,6 +18,9 @@ spring:
   user:
    name: user
    password: user
+ devtools:
+  restart:
+   enabled: true
    
 # 포트 설정
 server: 
@@ -34,7 +37,7 @@ mybatis:
     default-fetch-size: 0 # 한 번에 가져올 최대 행 수 제한 (default: 0)
   # config-location: classpath:mybatis/mybatis-config.xml # mybatis 설정파일 경로 지정
   mapper-locations: classpath:/mapper/*-mapping.xml
-  type-aliases-package: com.multi.mini.dto # dto있는 패키지 별칭 자동 지정(ex. **/MemberDTO => MemberDTO)
+  type-aliases-package: com.example.demo.dto # dto있는 패키지 별칭 자동 지정(ex. **/MemberDTO => MemberDTO)
   
 # 기본 로깅 레벨 설정
 logging:
