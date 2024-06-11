@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <!-- Appenders -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- <charset>UTF-8</charset> -->
+            <Pattern>%d %5p [%c] %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- <charset>UTF-8</charset> -->
+            <Pattern>%d %5p %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 기본 패키지 로깅 -->
+    <logger name="com.multi" level="DEBUG" appender-ref="console" />
+
+    <!-- 쿼리 select 테이블 형식으로 로깅 -->
+    <logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog" />
+    <logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog" />
+
+    <root level="off">
+        <appender-ref ref="console" />
+    </root>
+</configuration>
