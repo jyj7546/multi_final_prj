@@ -21,7 +21,6 @@ import com.example.demo.dto.MemberDTO;
 import com.example.demo.service.MemberService;
 import com.example.demo.status.StatusMsg;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
