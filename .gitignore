@@ -5,10 +5,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-<<<<<<< HEAD
 
-=======
->>>>>>> 3b55e8c (깃이그노어 수정)
 ### STS ###
 .apt_generated
 .classpath
@@ -20,10 +17,7 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-<<<<<<< HEAD
 
-=======
->>>>>>> 3b55e8c (깃이그노어 수정)
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -32,19 +26,13 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-<<<<<<< HEAD
 
-=======
->>>>>>> 3b55e8c (깃이그노어 수정)
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-<<<<<<< HEAD
 
-=======
->>>>>>> 3b55e8c (깃이그노어 수정)
 ### VS Code ###
 .vscode/
