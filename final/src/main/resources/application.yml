@@ -16,17 +16,17 @@ spring:
   hikari: # 로그백 쿼리 로깅 설정
    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
    jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/fullstackdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
- security:
-  user:
-   name: user
-   password: user
+#  security:
+#   user:
+#    name: user
+#    password: user
  devtools:
   restart:
    enabled: true
    
 # 포트 설정.
-server: 
-  port: 8080
+server:
+ port: 8080
   
 # mybatis 설정
 mybatis:
