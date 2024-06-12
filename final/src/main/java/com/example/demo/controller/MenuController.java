@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class MenuController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
     /**
      * 각 메뉴 호출시 사용할 컨트롤러
