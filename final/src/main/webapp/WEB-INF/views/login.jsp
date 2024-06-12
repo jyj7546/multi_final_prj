@@ -26,7 +26,7 @@
 </div>
 <br>
 <div id="div_l2">
-<p>계정이 없으신가요?</p>
+<p>계정이 없으신가요? 네 없습니다.</p>
 <a id="a1" href="sign-up">회원가입</a>
 </div>
 </div>
