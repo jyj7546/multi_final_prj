@@ -64,3 +64,4 @@ logging:
       sqltiming: INFO    # SQL + 소요시간 출력
       connection : OFF  # 커넥션 연결/종료 정보 출력
       
+# 테스트 수정

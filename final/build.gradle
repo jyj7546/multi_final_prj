@@ -39,6 +39,7 @@ dependencies {
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'	// log4j2
 	implementation group: 'org.json', name: 'json', version: '20240303'	// json
 	compileOnly 'org.projectlombok:lombok'
+	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
