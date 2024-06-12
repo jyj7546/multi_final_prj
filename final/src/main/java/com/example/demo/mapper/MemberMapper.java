@@ -11,11 +11,11 @@ import com.example.demo.dto.MemberDTO;
 @Repository
 @Mapper
 public interface MemberMapper {
-    MemberDTO getMember(String memId);
+    MemberDTO getMember(String id);
     int getMemberCnt();
     List<Map<String, Object>> getMemberList();
     int insertMember(MemberDTO dto);
     MemberDTO loginMember(Map<String,Object> param);
-    int deleteMember(String memId);
+    int deleteMember(String id);
     
 }

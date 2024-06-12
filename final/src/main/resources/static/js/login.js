@@ -6,10 +6,10 @@ $(document).ready(async function() {	// await 사용으로 인한 async: 비동�
     const myModule = module.default;
 
 	// 세션 아이디 있는 경우 메인으로 강제이동 => 세션 체크 서버단에서 하는걸로 변경
-    // const sessionMemId = '<%= (String)session.getAttribute("sessionMemId") %>';
-	// const sessionMemId = sessionStorage.getItem('sessionMemId')
-	// console.log("sessionMemId: ", sessionMemId);
-    // if (sessionMemId != null) {
+    // const sessionid = '<%= (String)session.getAttribute("sessionid") %>';
+	// const sessionid = sessionStorage.getItem('sessionid')
+	// console.log("sessionid: ", sessionid);
+    // if (sessionid != null) {
 	// 	// window.location.href = "mainfeed";
 	// 	// myModule.sectionChg("mainfeed");
     // }
@@ -20,10 +20,10 @@ $(document).ready(async function() {	// await 사용으로 인한 async: 비동�
 	
 	    // 각 입력 필드에서 값을 가져옴
 	    let formData = {
-			memId: $("#memId").val().replace(/(^\s*)|(\s*$)/g, ""),
-			memPw: $("#memPw").val().replace(/(^\s*)|(\s*$)/g, "")
+			id: $("#id").val().replace(/(^\s*)|(\s*$)/g, ""),
+			pw: $("#pw").val().replace(/(^\s*)|(\s*$)/g, "")
         };
-		if (formData.memId == "" || formData.memPw == "") {
+		if (formData.id == "" || formData.pw == "") {
 			alert("아이디와 비밀번호를 모두 입력해주세요.");
 		} else {
 			$.ajax({

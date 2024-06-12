@@ -18,8 +18,8 @@ public class MemberService {
     @Autowired
     MemberDTO memberDTO;
 
-    public MemberDTO getMember(String memId) {
-        MemberDTO dto = mapper.getMember(memId);
+    public MemberDTO getMember(String id) {
+        MemberDTO dto = mapper.getMember(id);
         return dto;
     }
 
@@ -37,10 +37,10 @@ public class MemberService {
 
     public String loginMember(Map<String, Object> param) {
         String result = null;
-        MemberDTO dto1 = getMember((String) param.get("memId"));    // 먼저 해당 아이디로 회원 존재하는지 조회
+        MemberDTO dto1 = getMember((String) param.get("id"));    // 먼저 해당 아이디로 회원 존재하는지 조회
         System.out.println("dto1 ::: "+dto1);
         if(dto1 != null) {  // 회원 존재하는지 체크   
-            if(dto1.getMemPw().equals(param.get("memPw"))) {   // 비번 맞는지 체크
+            if(dto1.getPw().equals(param.get("pw"))) {   // 비번 맞는지 체크
                 result = StatusMsg.USER_LOGIN_SUCC;
             } else {    // 비번 틀린 경우
                 result = StatusMsg.USER_LOGIN_FAIL_PW;
@@ -54,8 +54,8 @@ public class MemberService {
     }
 
 
-    public int deleteMember(String memId) {
-        return mapper.deleteMember(memId);
+    public int deleteMember(String id) {
+        return mapper.deleteMember(id);
     }
 
     
