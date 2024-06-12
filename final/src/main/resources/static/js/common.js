@@ -4,7 +4,7 @@
 const myModule = {
     /**
      * 메뉴 클릭 시 해당하는 뷰 jsp를 리턴하는 컨트롤러 호출
-     * @param {"mainfeed", "mypage-main", "login", "sign_up", "write", "DM"} menuName 
+     * @param {"mainfeed", "mypage-main", "login", "sign-up", "write", "DM"} menuName 
      */
     sectionChg: function(menuName) {
         console.log("sectionChg start");
@@ -36,17 +36,17 @@ const myModule = {
     sessionChk: function() {
         $.ajax({
             type: "POST",
-            url: "/getSessionMemId",
+            url: "/getSessionid",
             contentType: "application/json",
             // data: JSON.stringify(formData),
             success: function(response, status, xhr) {
                 console.log("xhr.responseText: " + xhr.responseText);
                 if(xhr.status == 200) {
                     if(response == "") {    // null리턴이 아닌 이유 수정필요 일단 임시로 이렇게
-                        console.log("sessionMemId: ", response);
+                        console.log("sessionid: ", response);
                         myModule.sectionChg("login");
                     } else {
-                        console.log("sessionMemId: ", response);
+                        console.log("sessionid: ", response);
                         // myModule.sectionChg("mypage-main");
                     }
                     
@@ -61,9 +61,9 @@ const myModule = {
 
         
 
-        // let sessionMemId = "<%= session.getAttribute('sessionMemId') %>";
-        // if (sessionMemId) {
-        //     console.log("sessionMemId: ", sessionMemId);
+        // let sessionid = "<%= session.getAttribute('sessionid') %>";
+        // if (sessionid) {
+        //     console.log("sessionid: ", sessionid);
         // } else {
         //     window.location.href = "login";
         // }

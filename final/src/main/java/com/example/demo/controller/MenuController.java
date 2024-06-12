@@ -19,7 +19,7 @@ public class MenuController {
 
     /**
      * 각 메뉴 호출시 사용할 컨트롤러
-     * @param menuName: {"mainfeed", "mypage-main", "login", "sign_up", "write", "DM"}
+     * @param menuName: {"mainfeed", "mypage-main", "login", "sign-up", "write", "DM"}
      * @return
      */
     @GetMapping("{menuName}")
@@ -38,7 +38,7 @@ public class MenuController {
             }
         } else {    // 타페이지 호출 시 세션 체크 후 처리
             // 회원가입 호출 시에는 세션 비어있음 체크 제외
-            if(!menuName.equals("sign_up")) {
+            if(!menuName.equals("sign-up")) {
                 // session 체크해서 비어있을 경우, 무조건 login 페이지 리턴
                 if(session.getAttribute(MySession.LOGIN_MEMBER) == null) {
                     menuName = "login";

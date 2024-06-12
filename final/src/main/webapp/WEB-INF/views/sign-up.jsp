@@ -6,10 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>sign_up</title>
+<title>sign-up</title>
 <link type="text/css" href="/css/login.css" rel="stylesheet">
 <script src="/js/jquery-3.7.1.min.js"></script>
-<script type=text/javascript src ="/js/sign_up.js"></script>
+<script type=text/javascript src ="/js/sign-up.js"></script>
 
 </head>
 <body>
