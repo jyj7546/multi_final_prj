@@ -8,14 +8,14 @@ spring:
    prefix: /WEB-INF/views/
    suffix: .jsp
  datasource: # DB 정보 설정
-  url: jdbc:mysql://localhost:3306/fullstackdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+  url: jdbc:mysql://localhost:3306/finalprojectdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
   username: fullstack  # 본인 DB USER명으로 변경필요
   password: fullstack  # 본인 DB PASSWORD명으로 변경필요
   driver-class-name: com.mysql.cj.jdbc.Driver
   connection-test-query: SELECT NOW() FROM dual
   hikari: # 로그백 쿼리 로깅 설정
    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-   jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/fullstackdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+   jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/finalprojectdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
 #  security:
 #   user:
 #    name: user
