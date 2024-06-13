@@ -34,8 +34,4 @@ $(document).ready(async function() {
     createIcon.on("click", function() {
         myModule.sectionChg("write");
     });
-    // DM페이지 이동
-    dmIcon.on("click", function() {
-        myModule.sectionChg("DM");
-    });
 });

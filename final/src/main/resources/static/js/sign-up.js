@@ -11,11 +11,11 @@ $(document).ready(async function() {
 		// 컨트롤러로 보낼 form 데이터 값 가져옴 
 			// => @RequestBody MemberDTO dto에 자동 매핑되게끔 MemberDTO 파일 변수와 변수명을 동일하게 맞춤
 			let formData = {
-				memId: $("#id_s").val().replace(/(^\s*)|(\s*$)/g, ""),	// 공백 제거 정규식
-				memPw: $("#pw_s").val().replace(/(^\s*)|(\s*$)/g, ""),
-				memName: $("#name_s").val().replace(/(^\s*)|(\s*$)/g, ""),
-				// memBirth:
-				memEmail: $("#email_s").val().replace(/(^\s*)|(\s*$)/g, "")
+				id: $("#id_s").val().replace(/(^\s*)|(\s*$)/g, ""),	// 공백 제거 정규식
+				pw: $("#pw_s").val().replace(/(^\s*)|(\s*$)/g, ""),
+				name: $("#name_s").val().replace(/(^\s*)|(\s*$)/g, ""),
+				// birth:
+				email: $("#email_s").val().replace(/(^\s*)|(\s*$)/g, "")
 			};
 			
 
@@ -36,10 +36,10 @@ $(document).ready(async function() {
 		// let check_pw=0;
 	
 	    // 입력값들에 대해 정규 표현식을 이용한 유효성 검사를 수행하고 결과를 저장
-	    // if(email_Regex.test(formData.memEmail)) {
+	    // if(email_Regex.test(formData.email)) {
 		// 	check_email = 1;
 		// }
-		// if(name_Regex.test(formData.memName)) {
+		// if(name_Regex.test(formData.name)) {
 		// 	check_name = 1;
 		// }
 
@@ -52,10 +52,10 @@ $(document).ready(async function() {
 
 
 		// 빠른 테스트를 위해 아래 정규식 체크는 임시 주석처리함
-		// if(id_Regex.test(formData.memId)) {
+		// if(id_Regex.test(formData.id)) {
 		// 	check_id = 1;
 		// }
-		// if(pw_Regex.test(formData.memPw)) {
+		// if(pw_Regex.test(formData.pw)) {
 		// 	check_pw = 1;
 		// }
 		

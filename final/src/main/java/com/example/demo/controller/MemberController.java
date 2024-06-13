@@ -34,13 +34,13 @@ public class MemberController {
 
     /**
      * 회원아이디로 회원 데이터 조회
-     * @param memId
+     * @param id
      * @return
      */
-    @GetMapping("getMember/{memId}")
+    @GetMapping("getMember/{id}")
     @ResponseBody
-    public ResponseEntity<Object> getMember(@PathVariable String memId) {
-        MemberDTO dto = memberService.getMember(memId);
+    public ResponseEntity<Object> getMember(@PathVariable String id) {
+        MemberDTO dto = memberService.getMember(id);
         
         // MakeStatus status = new MakeStatus();
         // HttpHeaders headers = new HttpHeaders();
@@ -136,13 +136,13 @@ public class MemberController {
     @ResponseBody
     public ResponseEntity<Object> loginMember(@RequestBody MemberDTO dto, HttpServletRequest request) {
         Map<String, Object> param = new HashMap<>();
-        param.put("memId", dto.getMemId());
-        param.put("memPw", dto.getMemPw());
+        param.put("id", dto.getId());
+        param.put("pw", dto.getPw());
         String status = memberService.loginMember(param);
 
         if(status.equals(StatusMsg.USER_LOGIN_SUCC)) {  // 로그인 성공
             HttpSession session = request.getSession(true);
-            session.setAttribute(MySession.LOGIN_MEMBER, dto.getMemId());
+            session.setAttribute(MySession.LOGIN_MEMBER, dto.getId());
             System.out.println("session ::: "+session.getAttribute(MySession.LOGIN_MEMBER));
 
             return new ResponseEntity<Object>(StatusMsg.USER_JOIN_SUCC, HttpStatus.OK);
@@ -163,12 +163,12 @@ public class MemberController {
      * @param request
      * @return
      */
-    @PostMapping("getSessionMemId")
+    @PostMapping("getSessionid")
     @ResponseBody   // 자바객체를 HTTP요청의 바디내용으로 (JSON형식으로)매핑하여 클라이언트로 전송하기 위한 어노테이션
-    public ResponseEntity<Object> getSessionMemId(HttpSession session) {
+    public ResponseEntity<Object> getSessionid(HttpSession session) {
             if (session.getAttribute(MySession.LOGIN_MEMBER) != null) { // 세션 null이 아닌 경우에만
-                String sessionMemId = (String) session.getAttribute(MySession.LOGIN_MEMBER);    // 세션 Stirng 형변환
-                return ResponseEntity.ok(sessionMemId); // 프론트에게 OK(200)상태와 함꼐 세션아이디 String으로 바디에 넣어서 전달
+                String sessionid = (String) session.getAttribute(MySession.LOGIN_MEMBER);    // 세션 Stirng 형변환
+                return ResponseEntity.ok(sessionid); // 프론트에게 OK(200)상태와 함꼐 세션아이디 String으로 바디에 넣어서 전달
             } else {
                 return ResponseEntity.ok(null);
             }
@@ -193,17 +193,17 @@ public class MemberController {
     /**
      * 회원탈퇴
      * 구현미완
-     * @param memId
+     * @param id
      * @param request
      * @param response
      * @param dto
      * @param model
      * @throws Exception
      */
-    @PostMapping("deleteMember")
+    @PostMapping("deleteMember/{id}")
     @ResponseBody
-	public ResponseEntity<Object> deleteMember(@RequestBody String memId) {
-	    int result = memberService.deleteMember(memId);
+	public ResponseEntity<Object> deleteMember(@PathVariable String id) {
+	    int result = memberService.deleteMember(id);
 
         if(result > 0) {
             return new ResponseEntity<Object>(StatusMsg.USER_QUIT_SUCC, HttpStatus.ACCEPTED);
