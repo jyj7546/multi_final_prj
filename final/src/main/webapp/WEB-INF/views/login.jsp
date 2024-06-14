@@ -21,7 +21,7 @@
 	<form id="form_l1">
 		<input class="input_s" type="text" id="id" name="id" value="" style="margin: 10px;"><br>
 		<input class="input_s" type="password" id="pw" name="pw" value="" style="margin: 10px;"><br>
-		<input id="button" type="submit" value="로그인" style="margin: 10px;">
+		<input id="button" type="submit" value="로그인인" style="margin: 10px;">
 	</form>
 </div>
 <br>
