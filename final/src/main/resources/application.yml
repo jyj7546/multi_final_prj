@@ -64,4 +64,14 @@ logging:
       sqltiming: INFO    # SQL + 소요시간 출력
       connection : OFF  # 커넥션 연결/종료 정보 출력
       
+# 크롬드라이버 경로 => WebDriverManager 라이브러리 사용하여 자동다운로드하는걸로 변경
+# webdriver-path:
+#  chrome: /driver/chromedriver.exe
 
+# 마트 홈페이지 기본세일정보 URL
+mart:
+ url:
+  emart: https://emart.ssg.com/
+  homeplus: https://mfront.homeplus.co.kr/
+  lottemart: https://www.lotteon.com/p/display/main/lottemart
+  

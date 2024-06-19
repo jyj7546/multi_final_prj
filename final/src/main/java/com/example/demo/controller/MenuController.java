@@ -2,12 +2,14 @@ package com.example.demo.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.MySession;
+import com.example.demo.crawling.CrawlingTest2;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -17,6 +19,9 @@ public class MenuController {
 
     private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
+    @Autowired
+    CrawlingTest2 crawlingTest2;
+
     /**
      * 각 메뉴 호출시 사용할 컨트롤러
      * @param menuName: {"mainfeed", "mypage-main", "login", "sign-up", "write", "DM"}
@@ -24,9 +29,9 @@ public class MenuController {
      */
     @GetMapping("{menuName}")
     public ModelAndView goMenu(@PathVariable("menuName") String menuName, HttpSession session) {
-        System.out.println("==============");
-        logger.info("first menuName is... " + menuName);
-        System.out.println("==============");
+        // System.out.println("==============");
+        // logger.info("first menuName is... " + menuName);
+        // System.out.println("==============");
 
         ModelAndView mv = new ModelAndView();
 
@@ -42,19 +47,33 @@ public class MenuController {
                 // session 체크해서 비어있을 경우, 무조건 login 페이지 리턴
                 if(session.getAttribute(MySession.LOGIN_MEMBER) == null) {
                     menuName = "login";
-                    mv.addObject("message", "로그인 먼저 해주세요.");
+                    // mv.addObject("message", "로그인 먼저 해주세요.");
                 }
             }
         }
         
-        System.out.println("==============");
-        logger.info("mv is... " + mv.toString());
-        logger.info("second menuName is... " + menuName);
-        System.out.println("==============");
+        // System.out.println("==============");
+        // logger.info("mv is... " + mv.toString());
+        // logger.info("second menuName is... " + menuName);
+        // System.out.println("==============");
 
         mv.setViewName(menuName);
 
         return mv;
     }
+
+    /**
+     * 크롤링 테스트를 위한 임시 컨트롤러
+     */
+    @GetMapping("craw")
+    public void craw() {
+        System.out.println("#########################");
+        logger.info("######crawling test######");
+        System.out.println("#########################");
+
+        crawlingTest2.crawlEmart();
+    }
+
+    
     
 }
