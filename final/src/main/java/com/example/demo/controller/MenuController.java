@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.MySession;
-import com.example.demo.crawling.CrawlingTest2;
+import com.example.demo.service.crawling.CrawlingLogicService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -20,7 +20,7 @@ public class MenuController {
     private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
     @Autowired
-    CrawlingTest2 crawlingTest2;
+    CrawlingLogicService crawlingTest2;
 
     /**
      * 각 메뉴 호출시 사용할 컨트롤러
@@ -62,17 +62,7 @@ public class MenuController {
         return mv;
     }
 
-    /**
-     * 크롤링 테스트를 위한 임시 컨트롤러
-     */
-    @GetMapping("craw")
-    public void craw() {
-        System.out.println("#########################");
-        logger.info("######crawling test######");
-        System.out.println("#########################");
 
-        crawlingTest2.crawlEmart();
-    }
 
     
     
