@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.example.demo.mapper.CrawlingMapper">
+
+    <select id="getCrawlingData" parameterType="String" resultType="CrawlingDTO">
+        SELECT * FROM crawling WHERE `unique_key` = #{uniqueKey}
+    </select>
+
+    <select id="getCrawlingDataCnt" resultType="int">
+        SELECT COUNT(*) FROM crawling
+    </select>
+
+    <!-- <insert id="insertMember" parameterType="CrawlingDTO">
+        INSERT INTO crawling (`id`, `pw`, `name`, `birth`, `email`)
+        VALUES (#{id}, #{pw}, #{name}, #{birth}, #{email})
+    </insert> -->
+    
+    <insert id="insertCrawlingData" parameterType="java.util.ArrayList">
+        INSERT INTO crawling (`mart_cd`, `subtitle`, `goods_name`, `price`, `goods_direct_link`, `crawling_date`)
+        VALUES 
+        <foreach collection="list" item="arr" separator=","> 
+            (#{arr.martCd}, #{arr.subtitle}, #{arr.goodsName}, #{arr.price}, #{arr.goodsDirectLink}, #{arr.crawlingDate})
+        </foreach>
+    </insert>
+
+    <!-- <update id="updateMember" parameterType="java.util.ArrayList">
+        UPDATE crawling (`mart_cd`, `subtitle`, `goods_name`, `price`, `goods_direct_link`, `crawling_date`)
+        VALUES (#{id}, #{pw}, #{name}, #{birth}, #{email})
+    </update> -->
+
+</mapper>
