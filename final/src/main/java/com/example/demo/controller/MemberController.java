@@ -136,13 +136,13 @@ public class MemberController {
     @ResponseBody
     public ResponseEntity<Object> loginMember(@RequestBody MemberDTO dto, HttpServletRequest request) {
         Map<String, Object> param = new HashMap<>();
-        param.put("id", dto.getId());
+        param.put("id", dto.getMemId());
         param.put("pw", dto.getPw());
         String status = memberService.loginMember(param);
 
         if(status.equals(StatusMsg.USER_LOGIN_SUCC)) {  // 로그인 성공
             HttpSession session = request.getSession(true);
-            session.setAttribute(MySession.LOGIN_MEMBER, dto.getId());
+            session.setAttribute(MySession.LOGIN_MEMBER, dto.getMemId());
             System.out.println("session ::: "+session.getAttribute(MySession.LOGIN_MEMBER));
 
             return new ResponseEntity<Object>(StatusMsg.USER_JOIN_SUCC, HttpStatus.OK);

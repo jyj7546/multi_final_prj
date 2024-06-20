@@ -74,4 +74,13 @@ mart:
   emart: https://emart.ssg.com/
   homeplus: https://mfront.homeplus.co.kr/
   lottemart: https://www.lotteon.com/p/display/main/lottemart
-  
+
+# 코드값 임시
+code:
+ mart:
+  emart: emart
+  homeplus: homeplus
+  lottemart: lottemart
+ board:
+  basic: basic
+  user: user
