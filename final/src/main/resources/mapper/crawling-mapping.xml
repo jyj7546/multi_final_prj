@@ -4,20 +4,22 @@
 
 <mapper namespace="com.example.demo.mapper.CrawlingMapper">
 
-    <select id="getCrawlingData" parameterType="String" resultType="CrawlingDTO">
+    <select id="getCrawlingEntireData" parameterType="string" resultType="CrawlingDTO">
         SELECT * FROM crawling WHERE `unique_key` = #{uniqueKey}
     </select>
 
-    <select id="getCrawlingDataCnt" resultType="int">
+    <select id="getCrawlingEntireDataCnt" resultType="int">
         SELECT COUNT(*) FROM crawling
     </select>
-
-    <!-- <insert id="insertMember" parameterType="CrawlingDTO">
-        INSERT INTO crawling (`id`, `pw`, `name`, `birth`, `email`)
-        VALUES (#{id}, #{pw}, #{name}, #{birth}, #{email})
-    </insert> -->
+    <select id="selectTodayCrawlingDataCnt" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM crawling WHERE `mart_cd` = #{martCd} AND `crawling_date` = #{crawlingDate}
+    </select>
     
-    <insert id="insertCrawlingData" parameterType="java.util.ArrayList">
+    <select id="selectTodayCrawlingData" parameterType="map" resultType="hashmap">
+        SELECT * FROM crawling WHERE `mart_cd` = #{martCd} AND `crawling_date` = #{crawlingDate}
+    </select>
+    
+    <insert id="insertCrawlingData" parameterType="arraylist">
         INSERT INTO crawling (`mart_cd`, `subtitle`, `goods_name`, `price`, `goods_direct_link`, `crawling_date`)
         VALUES 
         <foreach collection="list" item="arr" separator=","> 
@@ -29,5 +31,9 @@
         UPDATE crawling (`mart_cd`, `subtitle`, `goods_name`, `price`, `goods_direct_link`, `crawling_date`)
         VALUES (#{id}, #{pw}, #{name}, #{birth}, #{email})
     </update> -->
+
+    <!-- <delete id="deleteCrawlingData" parameterType="String">
+        DELETE FROM crawling WHERE `unique_key` = #{uniqueKey}
+    </delete> -->
 
 </mapper>
