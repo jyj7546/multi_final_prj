@@ -1,6 +1,7 @@
 package com.example.demo.service.crawling;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,27 @@ public class CrawlingDBService {
     CrawlingMapper mapper;
 
     @Autowired
-    CrawlingDTO memberDTO;
+    CrawlingDTO crawlingDTO;
     
     public int insertCrawlingData(List<CrawlingDTO> dtoList) {
-        return mapper.insertCrawlingData(dtoList);  // TODO: 적재 성공 시, 리턴 값(적재 성공 갯수인지) 확인 하고 이후단 분기 처리 필요
+        int resultCount = mapper.insertCrawlingData(dtoList);
+        return resultCount;
     }
+
+    public int selectTodayCrawlingDataCnt(Map<String, Object> map) {
+        int resultCount = mapper.selectTodayCrawlingDataCnt(map);
+        return resultCount;
+    }
+
+    public List<CrawlingDTO> selectTodayCrawlingData(Map<String, Object> map) {
+        List<CrawlingDTO> result = mapper.selectTodayCrawlingData(map);
+        return result;
+    }
+
+
+
+    // public int deleteCrawlingData(Map<String, Object> map) {
+    //     int resultCount = mapper.deleteCrawlingData(map);
+    //     return resultCount;
+    // }
 }

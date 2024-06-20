@@ -2,7 +2,9 @@ package com.example.demo.service.crawling;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -36,7 +38,7 @@ public class CrawlingLogicService {
     @Value("${code.mart.emart}")
     private String EMART_CODE;
     @Value("${code.mart.homeplus}")
-    private String HOOMEPLUSE_CODE;
+    private String HOMEPLUS_CODE;
     @Value("${code.mart.lottemart}")
     private String LOTTEMART_CODE;
 
@@ -56,9 +58,44 @@ public class CrawlingLogicService {
 
     // TODO: 셀레니움 html 요소 가져오기 전에 먼저 있는지 체크하는 메소드
 
-
-    public boolean crawlEmart() {
+    public boolean crawling(String martCd) {
         boolean result = false;
+
+        logger.info("IIIIIIIIII");
+        logger.info("금일자 {} 크롤링 시작", martCd);
+        logger.info("IIIIIIIIII");
+
+        switch (martCd) {
+            case "emart":
+                result = crawlingEmart();
+                break;
+            case "homeplus":
+                // crawlingHomeplus();
+                break;
+            case "lottemart":
+                // crawlingLotte();
+                break;
+            default:
+                logger.error("마트 파라미터 오류");
+                break;
+        }
+
+        return result;
+    }
+
+    /**
+     * 이마트 크롤링
+     * @return
+     */
+    public boolean crawlingEmart() {
+        boolean result = false;
+        String martCd = EMART_CODE;
+        String today = MyTimeUtil.getNowDate("yyyyMMdd");
+
+        // 크롤링 중복 여부 체크
+        if(chkAlreadyCrawling(martCd, today)) {
+            return result;
+        }
 
         WebDriver driver = webDriverFactory.createChromeDriver();
 
@@ -182,8 +219,8 @@ public class CrawlingLogicService {
                         link = EMART_URL;
                     } 
                     dto.setGoodsDirectLink(link);
-                    dto.setMartCd(EMART_CODE);
-                    dto.setCrawlingDate(MyTimeUtil.getNowDate("yyyyMMdd"));
+                    dto.setMartCd(martCd);
+                    dto.setCrawlingDate(today);
 
                     crawlingDTOList.add(dto);
                 }
@@ -212,13 +249,40 @@ public class CrawlingLogicService {
         // }
 
         int insertCount = crawlingService.insertCrawlingData(crawlingDTOList);    // 크롤링한 데이터 저장
-
+        logger.info("=============================================");
+        logger.info("마트: {}, 일자: {}로 크롤링 데이터 {}개 적재 성공", martCd, today, insertCount);
+        logger.info("=============================================");
         if(insertCount >= 1) {
             // 1혹은 그 이상이면 데이터 적재 성공
             result = true;
         } 
 
         webDriverFactory.quitDriver(driver);    // 크롤링 끝 세션 종료 필수
+
+        return result;
+    }
+
+    /**
+     * 금일자 크롤링 중복 여부 체크
+     * @param martCd {"emart", "homeplus", "lottemart"}
+     * @param today "yyyyMMdd"
+     * @return
+     */
+    public boolean chkAlreadyCrawling(String martCd, String today) {
+        boolean result = false;
+        // 마트, 크롤링 일자로 조회해서 이미 있으면 update(delete and insert or upsert)
+        Map<String, Object> param = new HashMap<>();
+        param.clear();
+        param.put("martCd", martCd);
+        param.put("crawlingDate", today);
+
+        int selectCount = crawlingService.selectTodayCrawlingDataCnt(param);
+        if(selectCount > 0) {
+            logger.info("=============================================");
+            logger.info("마트: {}, 일자: {}로 크롤링 데이터 {}개 이미 존재", martCd, today, selectCount);
+            logger.info("=============================================");
+            result = true;
+        }
 
         return result;
     }
