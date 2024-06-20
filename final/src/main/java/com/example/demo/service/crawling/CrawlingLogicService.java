@@ -1,8 +1,6 @@
-package com.example.demo.crawling;
+package com.example.demo.service.crawling;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,19 +8,24 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
+import com.example.demo.controller.MenuController;
 import com.example.demo.dto.CrawlingDTO;
+import com.example.demo.util.MyTimeUtil;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-
+/**
+ * 설명: 크롤링 로직 서비스
+ * 작성자: 전영준
+ * 최초생성: 2024-06-20
+ * 수정일자: 
+ */
 @Service
-public class CrawlingTest2 {
+public class CrawlingLogicService {
     @Value("${mart.url.emart}")
     private String EMART_URL;
     @Value("${mart.url.homeplus}")
@@ -38,43 +41,37 @@ public class CrawlingTest2 {
     private String LOTTEMART_CODE;
 
     @Autowired
-    CrawlingService crawlingService;
+    WebDriverFactory webDriverFactory;
 
-    private static final int CRAWLING_LIMIT_COUNT = 50;
+    @Autowired
+    CrawlingDBService crawlingService;
 
-    private WebDriver driver;
-    public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
-    // public static String WEB_DRIVER_PATH = "C:/fullstack/final2/multi_final_prj/final/src/main/resources/driver/chromedriver.exe";
+    private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
-    private void chrome() {
-        // Chrome WebDriver 자동 설치
-        WebDriverManager.chromedriver().setup();
+    private static final int CRAWLING_LIMIT_COUNT = 50; // 상품 갯수 많을 시 50개까지만 제한하여 크롤링
+    private static final Duration DURATION_1SEC = Duration.ofMillis(1000);  // 웹 대기 타임아웃
 
-        ChromeOptions options = new ChromeOptions();
-        // options.addArguments("headless"); // 창 안 띄우고 백그라운드 프로세스에서 실행
-        // options.setCapability("browserVersion", "126.0.6478.115");
-        // options.setCapability("ignoreProtectedModeSettings", true);
+    // TODO: html 셀렉터 By 지정자 한데 모으기 (계속 변동하고 바뀔 가능성 있어서 유지보수 포인트 높음)
+    // private static final By MAIN_CONTENT = new By.ByXPath("//*[@id=\"content\"]");
 
-        // WebDriver 생성
-        driver = new ChromeDriver(options);
-    }
+    // TODO: 셀레니움 html 요소 가져오기 전에 먼저 있는지 체크하는 메소드
 
-    public void crawlEmart() {
-        LocalDate now = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String formatedNow = now.format(formatter);
 
-        chrome();
+    public boolean crawlEmart() {
+        boolean result = false;
 
-        List<String> subtitleList = new ArrayList<>();
-        List<String> goodsNameList = new ArrayList<>();
-        List<Integer> priceList = new ArrayList<>();
-        List<String> goodsDirectLinkList = new ArrayList<>();
+        WebDriver driver = webDriverFactory.createChromeDriver();
+
+        // 출력 테스트용 리스트
+        // List<String> subtitleList = new ArrayList<>();
+        // List<String> goodsNameList = new ArrayList<>();
+        // List<Integer> priceList = new ArrayList<>();
+        // List<String> goodsDirectLinkList = new ArrayList<>();
         
         List<CrawlingDTO> crawlingDTOList = new ArrayList<>();
 
         driver.get(EMART_URL);  // url 접속
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(1000)); // 페이지 기다림 타임아웃 1초
+        driver.manage().timeouts().implicitlyWait(DURATION_1SEC); // 페이지 기다림 타임아웃 1초
 
         // TODO: 팝업 뜨는 경우 체크 후 닫기 선행
 
@@ -82,20 +79,20 @@ public class CrawlingTest2 {
 
         try {
             driver.findElement(By.xpath("//*[@id=\"skip_gnb\"]/div/div[2]/ul/li[6]/a")).click();
-            driver.manage().timeouts().implicitlyWait(Duration.ofMillis(1000));
-            System.out.println("세일중 페이지 이동 성공");
+            driver.manage().timeouts().implicitlyWait(DURATION_1SEC);
+            logger.debug("세일중 페이지 이동 성공");
 
             // 메인 content 요소로 이동
             WebElement contentDiv = driver.findElement(By.xpath("//*[@id=\"content\"]"));
             
             // 섹션명 가져오기
             List<WebElement> sectionList = contentDiv.findElements(By.tagName("section"));
-            System.out.println("sectionList 갯수 : " + sectionList.size());
+            logger.debug("sectionList 갯수 : ", sectionList.size());
 
             int sectionCnt = 0;
             for (WebElement section : sectionList) {
                 String subtitle = section.findElement(By.cssSelector("div:nth-of-type(1) > div > strong")).getText();
-                System.out.println("subtitle ::: " + subtitle);
+                logger.debug("subtitle ::: ", subtitle);
                 
                 // 4번째까지만 가져오기 X
                 // 섹션 추가될 가능성이 있으므로 그냥 다 가져오고 세일중 전체보기만 패스
@@ -103,7 +100,7 @@ public class CrawlingTest2 {
                     continue;
                 }
 
-                subtitleList.add(subtitle);
+                // subtitleList.add(subtitle); // 출력 테스트용 리스트에 담음
                 sectionCnt++;
 
                 // 해당 섹션 상품 ul 가져오기
@@ -125,7 +122,7 @@ public class CrawlingTest2 {
                 }
                 
                 List<WebElement> liList1 = ulTag1.findElements(By.tagName("li"));
-                System.out.println("liList1 갯수 ::: " + liList1.size());
+                logger.debug("liList1 갯수 ::: " + liList1.size());
 
                 // TODO: 상품 갯수 너무 많은 경우 처리
 
@@ -133,7 +130,7 @@ public class CrawlingTest2 {
                     WebElement divTag1 = elem.findElement(By.cssSelector(".mnemitem_unit"));
                     WebElement aTag1 = divTag1.findElement(By.tagName("a"));
                     String link = aTag1.getAttribute("href");
-                    System.out.println("link ::: " + link);
+                    logger.debug("link ::: ", link);
 
                     String goodsName = "";
 
@@ -148,20 +145,20 @@ public class CrawlingTest2 {
                     // } else {
                     //     goodsName = divTag1.findElement(By.cssSelector("a > div:nth-of-type(1) > span")).getText();
                     // }
-                    // System.out.println("goodsName : " + goodsName);
+                    // logger.debug("goodsName : " + goodsName);
 
                     // 상품명 가져오기 2
                     List<WebElement> brandAndGoodsSpanTag = divTag1.findElements(By.cssSelector("a > div > span"));
-                    System.out.println("brandAndGoodsSpanTag.size() : " + brandAndGoodsSpanTag.size());
+                    logger.debug("brandAndGoodsSpanTag.size() : ", brandAndGoodsSpanTag.size());
                     if (brandAndGoodsSpanTag.size() == 1) {   
                         goodsName = brandAndGoodsSpanTag.get(0).getText();
                     } else if(brandAndGoodsSpanTag.size() == 2) {
                         String brandName = brandAndGoodsSpanTag.get(0).getText();
                         goodsName = brandAndGoodsSpanTag.get(1).getText();
                         goodsName = brandName + " " + goodsName;
-                        System.out.println("goodsName ::: " + goodsName);
+                        logger.debug("goodsName ::: ", goodsName);
                     } else {
-                        System.out.println("brandAndGoodsSpanTag.size() error. size is : " + brandAndGoodsSpanTag.size());
+                        logger.debug("brandAndGoodsSpanTag.size() error. size is : ", brandAndGoodsSpanTag.size());
                     }
 
                     // 가격 가져오기
@@ -169,12 +166,12 @@ public class CrawlingTest2 {
                     String stringPrice = divTag1.findElement(By.cssSelector("a > div:nth-of-type(2) > div.mnemitem_price_row > div.new_price > em")).getText();
                     String newPrice = stringPrice.replace(",", "");
                     int price = Integer.parseInt(newPrice);
-                    System.out.println("price ::: " + price);
+                    logger.debug("price ::: ", price);
 
-                    // 리스트에 추가
-                    goodsNameList.add(goodsName);
-                    priceList.add(price);
-                    goodsDirectLinkList.add(link);
+                    // 출력 테스트용 리스트에 추가
+                    // goodsNameList.add(goodsName);
+                    // priceList.add(price);
+                    // goodsDirectLinkList.add(link);
 
                     // DTO 생성 후 DTO 리스트로 추가
                     CrawlingDTO dto = new CrawlingDTO();
@@ -186,40 +183,44 @@ public class CrawlingTest2 {
                     } 
                     dto.setGoodsDirectLink(link);
                     dto.setMartCd(EMART_CODE);
-                    dto.setCrawlingDate(formatedNow);
+                    dto.setCrawlingDate(MyTimeUtil.getNowDate("yyyyMMdd"));
 
                     crawlingDTOList.add(dto);
                 }
             }
         } catch (NoSuchElementException noSuchElementException) {
-            System.out.println("============== ============== ==============");
-            System.out.println("============== html 태그 요소 없음 ==============");
-            System.out.println("============== ============== ==============");
-            noSuchElementException.getMessage();
-            noSuchElementException.getStackTrace();
+            logger.error("EEEEEEEEEE");
+            logger.error("html 태그 요소 없음");
+            logger.error("EEEEEEEEEE");
+
+            logger.error(noSuchElementException.getMessage());
+            noSuchElementException.printStackTrace();
         }
 
         // 테스트 출력
-        for (String subtitle : subtitleList) {
-            System.out.println("subtitle ::: " + subtitle);
-        }
-        for (String goodsName : goodsNameList) {
-            System.out.println("goodsName ::: " + goodsName);
-        }
-        for (int price : priceList) {
-            System.out.println("price ::: " + price);
-        }
-        for (String link : goodsDirectLinkList) {
-            System.out.println("link ::: " + link);
-        }
+        // for (String subtitle : subtitleList) {
+        //     logger.debug("subtitle ::: " + subtitle);
+        // }
+        // for (String goodsName : goodsNameList) {
+        //     logger.debug("goodsName ::: " + goodsName);
+        // }
+        // for (int price : priceList) {
+        //     logger.debug("price ::: " + price);
+        // }
+        // for (String link : goodsDirectLinkList) {
+        //     logger.debug("link ::: " + link);
+        // }
 
-        
-        crawlingService.insertCrawlingData(crawlingDTOList);
+        int insertCount = crawlingService.insertCrawlingData(crawlingDTOList);    // 크롤링한 데이터 저장
 
-        quitDriver();
+        if(insertCount >= 1) {
+            // 1혹은 그 이상이면 데이터 적재 성공
+            result = true;
+        } 
+
+        webDriverFactory.quitDriver(driver);    // 크롤링 끝 세션 종료 필수
+
+        return result;
     }
 
-    private void quitDriver() {
-        driver.quit();
-    }
 }
