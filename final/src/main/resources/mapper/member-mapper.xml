@@ -4,12 +4,12 @@
 
 <mapper namespace="com.example.demo.mapper.MemberMapper">
 
-    <select id="getMember" parameterType="String" resultType="MemberDTO">
-        SELECT * FROM member WHERE `id` = #{id}
+    <select id="getMember" parameterType="string" resultType="MemberDTO">
+        SELECT * FROM member WHERE `mem_id` = #{memId}
     </select>
 
     <select id="loginMember" parameterType="map" resultType="MemberDTO">
-        SELECT * FROM member WHERE `id` = #{id} AND `pw` = #{pw}
+        SELECT * FROM member WHERE `mem_id` = #{memId} AND `pw` = #{pw}
     </select>
 
     <select id="getMemberCnt" resultType="int">
@@ -21,13 +21,16 @@
     </select>
 
     <insert id="insertMember" parameterType="MemberDTO">
-        INSERT INTO member (`id`, `pw`, `name`, `birth`, `email`)
-        VALUES (#{id}, #{pw}, #{name}, #{birth}, #{email})
+        INSERT INTO member (`mem_id`, `pw`, `name`, `birth`, `email`)
+        VALUES (#{memId}, #{pw}, #{name}, #{birth}, #{email})
     </insert>
 
-    <delete id="deleteMember" parameterType="String">
-        DELETE member WHERE `id` = #{id}
+    <delete id="deleteMember" parameterType="string">
+        DELETE member WHERE `mem_id` = #{memId}
     </delete>
 
+    <select id="getMemberLevelByMemId" parameterType="string" resultType="string">
+        SELECT level FROM member where `mem_id` = #{memId}
+    </select>
     
 </mapper>

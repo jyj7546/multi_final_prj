@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <property name="CHARSET" value="UTF-8" />
+    <!-- <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){green} %clr(%5p){yellow} %clr(%thread){magenta} %clr(===){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx" /> -->
+    <property name="CONSOLE_LOG_PATTERN" value="%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight([%5level]) [%-40.40thread{39}] ::: %-40.40logger{39} : %n%m%n%wEx" />
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%5level] [%-40.40thread{39}] ::: %-40.40logger{39} : %m%n%wEx" />
+    <property name="SIMPLE_PATTERN" value="%green(%d{yyyy-MM-dd HH:mm:ss}) %highlight([%5level]) [%15.15t] ::: %-40.40logger{39} : %n%m%n%wEx" />
+    <property name="FILE_PATH" value="C:/fullstack/final2/logs/" />
+    <property name="FILE_NAME" value="my" />
+    <property name="FILE_NAME_PATTERN" value="-%d{HHmmss}.%i.log" />
+    <property name="MAX_FILE_SIZE" value="10MB" />
+    <property name="TOTAL_SIZE" value="100MB" />
+    <property name="MAX_HISTORY" value="7" />
+
+    <!-- 콘솔 로그 출력 패턴 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!-- <charset>${CHARSET}</charset> --> <!-- 이 속성 제거해야 vscode 콘솔에서 한글 안 깨짐 -->
+        </encoder>
+    </appender>
+
+    <!-- 심플 콘솔 로그 출력 패턴 설정 -->
+    <appender name="SIMPLE_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${SIMPLE_PATTERN}</pattern>
+            <!-- <charset>${CHARSET}</charset> --> <!-- 이 속성 제거해야 vscode 콘솔에서 한글 안 깨짐 -->
+        </encoder>
+    </appender>
+
+    <!-- 로그 파일 설정 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <file>${FILE_PATH}${FILE_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${FILE_PATH}%d{yyyy-MM-dd}/${FILE_NAME}${FILE_NAME_PATTERN}</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 에러 로그 파일 설정 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <file>${FILE_PATH}/error/err.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${FILE_PATH}%d{yyyy-MM-dd}/error/err${FILE_NAME_PATTERN}</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+
+    <!-- 루트 로깅 설정 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </root>
+
+    <!-- 기본 패키지 로깅 설정 -->
+    <logger name="com.example.demo" level="DEBUG" additivity="false">
+        <appender-ref ref="SIMPLE_CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </logger>
+
+    <!-- log4jdbc 쿼리 로깅 설정 -->
+    <logger name="jdbc" level="OFF" additivity="false" />
+    <logger name="jdbc.sqlonly" level="OFF" additivity="false" />
+    <logger name="jdbc.audit" level="OFF" additivity="false" />
+    <logger name="jdbc.resultset" level="OFF" additivity="false" />
+    <logger name="jdbc.connection" level="OFF" additivity="false" />
+
+    <logger name="jdbc.sqltiming" level="DEBUG" additivity="false">
+        <appender-ref ref="SIMPLE_CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </logger>
+    <logger name="jdbc.resultsettable" level="DEBUG" additivity="false">
+        <appender-ref ref="SIMPLE_CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ERROR_FILE" />
+    </logger>
+
+</configuration>
