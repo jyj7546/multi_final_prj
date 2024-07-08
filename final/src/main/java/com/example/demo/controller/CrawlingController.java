@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,22 +14,23 @@ import com.example.demo.dto.CrawlingDTO;
 import com.example.demo.service.crawling.CrawlingDBService;
 import com.example.demo.service.crawling.CrawlingLogicService;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 설명: 크롤링 호출 컨트롤러
  * 작성자: 전영준
  * 최초생성: 2024-06-20
  * 수정일자: 
  */
+@Slf4j
 @Controller
 @RequestMapping("/api/crawl")
+@RequiredArgsConstructor
 public class CrawlingController {
-    private static final Logger logger = LoggerFactory.getLogger(MenuController.class);
 
-    @Autowired
-    CrawlingLogicService crawlingLogicService;
-
-    @Autowired
-    CrawlingDBService crawlingDBService;
+    private final CrawlingLogicService crawlingLogicService;
+    private final CrawlingDBService crawlingDBService;
 
     /**
      * 크롤링 호출 메소드
@@ -63,10 +61,10 @@ public class CrawlingController {
         Map<String, Object> param = new HashMap<>();
         param.clear();
         param.put("martCd", martCd);
-        param.put("crawlingDate", date);
+        param.put("date", date);
 
-        List<CrawlingDTO> result = crawlingDBService.selectTodayCrawlingData(param);
-        logger.info("조회갯수 : {}", result.size());
+        List<CrawlingDTO> result = crawlingDBService.getCrawlingData(param);
+        log.debug("조회갯수 : {}", result.size());
 
         if(result.size() != 0) {    // TODO: null 체크 수정 필요
             

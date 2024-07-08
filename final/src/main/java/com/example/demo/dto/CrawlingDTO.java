@@ -2,13 +2,10 @@ package com.example.demo.dto;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
 import lombok.Data;
 import lombok.ToString;
 
 @ToString
-@Component
 @Data
 /**
  * 각 마트 세일 정보 크롤링 데이터 저장을 위한 DTO

@@ -20,10 +20,10 @@ $(document).ready(async function() {	// await 사용으로 인한 async: 비동�
 	
 	    // 각 입력 필드에서 값을 가져옴
 	    let formData = {
-			id: $("#id").val().replace(/(^\s*)|(\s*$)/g, ""),
+			memId: $("#memId").val().replace(/(^\s*)|(\s*$)/g, ""),
 			pw: $("#pw").val().replace(/(^\s*)|(\s*$)/g, "")
         };
-		if (formData.id == "" || formData.pw == "") {
+		if (formData.memId == "" || formData.pw == "") {
 			alert("아이디와 비밀번호를 모두 입력해주세요.");
 		} else {
 			$.ajax({
@@ -33,27 +33,25 @@ $(document).ready(async function() {	// await 사용으로 인한 async: 비동�
 				data: JSON.stringify(formData),	// json 으로 말음
 				success: function(response, status, xhr) {	// 응답 성공시 컨트롤러로부터 받는 값들
 					if(xhr.status == 200) {	// HttpStatus.OK (로그인 성공)
-						console.log("로그인 성공. xhr.responseText: " + xhr.responseText);
-						alert("로그인에 성공하였습니다.");
+						console.log("로그인 성공");
 						myModule.sectionChg("mypage-main");	// 로그인 성공 시 메인으로 이동
 					} else if(xhr.status == 204) {	// HttpStatus.NO_CONTENT (회원 미존재)
-						console.log("회원 미존재. xhr.responseText: " + xhr.responseText);
+						console.log("회원 미존재\t{}", xhr.responseText);
 						alert("존재하지 않는 회원입니다.");
 						myModule.sectionChg("login");	// 다시 로그인 페이지로
 					} else if(xhr.status == 203) {	// HttpStatus.NON_AUTHORITATIVE_INFORMATION (비번틀림)
-						console.log("비번 틀림. xhr.responseText: " + xhr.responseText);
-						
+						console.log("비번 불일치\t{}", xhr.responseText);
 						alert("비밀번호를 확인해주세요.");
 						myModule.sectionChg("login");	// 다시 로그인 페이지로
 					} else {	// 그 외 상태값
-						alert("xhr.status: " + xhr.status);
-						console.log("그 외 상태값. xhr.responseText: " + xhr.responseText);
+						console.log("그 외 상태\t{}", xhr.responseText);
+						// alert("에러 " + xhr.status);
 						window.location.href = "/error";	// 스프링부트 기본 에러페이지로 이동
 					}	
 				},
 				error: function(xhr, status, error) {	// 응답 오류시 처리
-					alert("xhr.status: " + xhr.status);
-					console.log("알 수 없는 오류. xhr.responseText: " + xhr.responseText);
+					console.log("알 수 없는 에러\t{}", xhr.responseText);
+					// alert("xhr.status: " + xhr.status);
 					window.location.href = "/error";	// 스프링부트 기본 에러페이지로 이동
 				}
 			});

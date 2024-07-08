@@ -11,12 +11,12 @@
     <select id="getCrawlingEntireDataCnt" resultType="int">
         SELECT COUNT(*) FROM crawling
     </select>
-    <select id="selectTodayCrawlingDataCnt" parameterType="map" resultType="int">
-        SELECT COUNT(*) FROM crawling WHERE `mart_cd` = #{martCd} AND `crawling_date` = #{crawlingDate}
+    <select id="selectCrawlingDataCnt" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM crawling WHERE `mart_cd` = #{martCd} AND `crawling_date` = #{date}
     </select>
     
-    <select id="selectTodayCrawlingData" parameterType="map" resultType="hashmap">
-        SELECT * FROM crawling WHERE `mart_cd` = #{martCd} AND `crawling_date` = #{crawlingDate}
+    <select id="selectCrawlingData" parameterType="map" resultType="hashmap">
+        SELECT * FROM crawling WHERE `mart_cd` = #{martCd} AND `crawling_date` = #{date}
     </select>
     
     <insert id="insertCrawlingData" parameterType="arraylist">

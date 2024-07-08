@@ -11,7 +11,7 @@ $(document).ready(async function() {
 		// 컨트롤러로 보낼 form 데이터 값 가져옴 
 			// => @RequestBody MemberDTO dto에 자동 매핑되게끔 MemberDTO 파일 변수와 변수명을 동일하게 맞춤
 			let formData = {
-				id: $("#id_s").val().replace(/(^\s*)|(\s*$)/g, ""),	// 공백 제거 정규식
+				memId: $("#memId_s").val().replace(/(^\s*)|(\s*$)/g, ""),	// 공백 제거 정규식
 				pw: $("#pw_s").val().replace(/(^\s*)|(\s*$)/g, ""),
 				name: $("#name_s").val().replace(/(^\s*)|(\s*$)/g, ""),
 				// birth:

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,31 +16,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.demo.MySession;
 import com.example.demo.dto.MemberDTO;
 import com.example.demo.service.MemberService;
 import com.example.demo.status.StatusMsg;
+import com.example.demo.userannotation.CheckRole;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class MemberController {
+    @Value("${session-key.member-id}")
+    private String sessionMemId;  // 세션 정보(회원ID) 가져오기 위한 고정 String 값 ("SESSION_MEMBER_ID")
 
-    // private static final Logger logger = LoggerFactory.getLogger(TestController.class);s
-
-    @Autowired
-    MemberService memberService;
+    // private static final Logger logger = LoggerFactory.getLogger(TestController.class); // @Sl4j로 대체됨
+    private final MemberService memberService;
 
     /**
      * 회원아이디로 회원 데이터 조회
-     * @param id
+     * @param memId
      * @return
      */
-    @GetMapping("getMember/{id}")
+    @GetMapping("getMember/{memId}")
     @ResponseBody
-    public ResponseEntity<Object> getMember(@PathVariable String id) {
-        MemberDTO dto = memberService.getMember(id);
+    public ResponseEntity<Object> getMember(@PathVariable String memId) {
+        MemberDTO dto = memberService.getMember(memId);
         
         // MakeStatus status = new MakeStatus();
         // HttpHeaders headers = new HttpHeaders();
@@ -109,18 +113,10 @@ public class MemberController {
         int result = memberService.insertMember(dto);
 
         if(result > 0) {    // 인서트 성공시 1 리턴됨
-            System.out.println("=====================");
-            System.out.println("=====================");
-            System.out.println("DB 인서트 성공");
-            System.out.println("=====================");
-            System.out.println("=====================");
+            log.debug("DB INSERT SUCCESS");
             return new ResponseEntity<Object>(StatusMsg.USER_JOIN_SUCC, HttpStatus.CREATED);
         } else {
-            System.out.println("=====================");
-            System.out.println("=====================");
-            System.out.println("DB 인서트 에러");
-            System.out.println("=====================");
-            System.out.println("=====================");
+            log.debug("DB INSERT FAIL");
             return new ResponseEntity<Object>(StatusMsg.USER_JOIN_FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -132,18 +128,20 @@ public class MemberController {
      * @param request
      * @return
      */
+    @CheckRole  // 권한 체크 어노테이션 (메소드 실행 직후 인터셉터)
     @PostMapping("loginMember")
     @ResponseBody
     public ResponseEntity<Object> loginMember(@RequestBody MemberDTO dto, HttpServletRequest request) {
         Map<String, Object> param = new HashMap<>();
-        param.put("id", dto.getMemId());
+        param.put("memId", dto.getMemId());
         param.put("pw", dto.getPw());
         String status = memberService.loginMember(param);
 
         if(status.equals(StatusMsg.USER_LOGIN_SUCC)) {  // 로그인 성공
-            HttpSession session = request.getSession(true);
-            session.setAttribute(MySession.LOGIN_MEMBER, dto.getMemId());
-            System.out.println("session ::: "+session.getAttribute(MySession.LOGIN_MEMBER));
+            // 세션 저장 직후 인터셉터로 권한 체크
+            HttpSession session = request.getSession(true); // true: 세션 있어도 새로 생성
+            session.setAttribute(sessionMemId, dto.getMemId());
+            log.debug("USER SESSION ===>\t{}",session.getAttribute(sessionMemId));
 
             return new ResponseEntity<Object>(StatusMsg.USER_JOIN_SUCC, HttpStatus.OK);
         } else if(status.equals(StatusMsg.USER_LOGIN_FAIL_NO_EXISTS)) { // 미존재 회원
@@ -166,8 +164,8 @@ public class MemberController {
     @PostMapping("getSessionid")
     @ResponseBody   // 자바객체를 HTTP요청의 바디내용으로 (JSON형식으로)매핑하여 클라이언트로 전송하기 위한 어노테이션
     public ResponseEntity<Object> getSessionid(HttpSession session) {
-            if (session.getAttribute(MySession.LOGIN_MEMBER) != null) { // 세션 null이 아닌 경우에만
-                String sessionid = (String) session.getAttribute(MySession.LOGIN_MEMBER);    // 세션 Stirng 형변환
+            if (session.getAttribute(sessionMemId) != null) { // 세션 null이 아닌 경우에만
+                String sessionid = (String) session.getAttribute(sessionMemId);    // 세션 Stirng 형변환
                 return ResponseEntity.ok(sessionid); // 프론트에게 OK(200)상태와 함꼐 세션아이디 String으로 바디에 넣어서 전달
             } else {
                 return ResponseEntity.ok(null);
@@ -193,17 +191,17 @@ public class MemberController {
     /**
      * 회원탈퇴
      * 구현미완
-     * @param id
+     * @param memId
      * @param request
      * @param response
      * @param dto
      * @param model
      * @throws Exception
      */
-    @PostMapping("deleteMember/{id}")
+    @PostMapping("deleteMember/{memId}")
     @ResponseBody
-	public ResponseEntity<Object> deleteMember(@PathVariable String id) {
-	    int result = memberService.deleteMember(id);
+	public ResponseEntity<Object> deleteMember(@PathVariable String memId) {
+	    int result = memberService.deleteMember(memId);
 
         if(result > 0) {
             return new ResponseEntity<Object>(StatusMsg.USER_QUIT_SUCC, HttpStatus.ACCEPTED);
