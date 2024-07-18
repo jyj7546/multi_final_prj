@@ -33,10 +33,10 @@ public class SecurityConfig {
 
     private final MyUserDetailsService myUserDetailsService;
 
-    @Bean
-    protected WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/favicon.ico", "/", "/login/**", "/login/login");
-    }
+    // @Bean
+    // protected WebSecurityCustomizer webSecurityCustomizer() {
+    //     return (web) -> web.ignoring().requestMatchers("/favicon.ico", "/", "/login/**", "/login/login");
+    // }
 
     /**
      * 비밀번호 암호화 빈 주입
@@ -75,10 +75,13 @@ public class SecurityConfig {
             // 인가(접근권한) 설정
             .authorizeHttpRequests((authorizeRequests) ->
                     authorizeRequests
-                            .requestMatchers("/", "/login/**", "/login/login").permitAll()  // 모든 권한 접근 가능한 URI(회원가입, 로그인, 메인화면 등)
-                            .requestMatchers("/user/**", "/api/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name()) // 유저, 관리자 권한 접근 가능
+                            // .requestMatchers("/", "/login/**", "/login/login").permitAll()  // 모든 권한 접근 가능한 URI(회원가입, 로그인, 메인화면 등)
+                            .requestMatchers("/user/**").authenticated()    // 해당 uri는 인증 후에 접근 가능
+                            // .requestMatchers("/user/**", "/api/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name()) // 유저, 관리자 권한 접근 가능
                             .requestMatchers("/admin/**", "/api/admin/**").hasRole(Role.ADMIN.name())  // 관리자 권한만 접근 가능한 URI
-                            .anyRequest().authenticated()
+                            // .anyRequest().authenticated()
+                            .anyRequest().permitAll()   // 상기 설정한 주소가 아니면 권한 X
+            
             )
             // 예외처리 추가 설정
             .exceptionHandling((exceptionConfig) -> exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint)
@@ -87,10 +90,10 @@ public class SecurityConfig {
             // 로그인 설정
             .formLogin((formLogin) -> 
                 formLogin   // 로그인 설정
-                    .loginPage("/login/login")  // 로그인화면 uri 설정
+                    .loginPage("/login")  // 로그인화면 uri 설정
                     .usernameParameter("memId")  // 로그인 아이디 json 키값(미설정시 default: "username")
                     .passwordParameter("pw")  // 로그인 패스워드 json 키값 (미설정시 default: "password")
-                    .loginProcessingUrl("/login/login-proc")    // 로그인 submit 요청 받을 uri => myUserDetailsService 메소드 user 객체 생성
+                    .loginProcessingUrl("/login-proc")    // 로그인 submit 요청 받을 uri => myUserDetailsService 메소드 user 객체 생성
                     .defaultSuccessUrl("/mypage-main", true)   // 로그인 성공시 이동할 uri
                     .failureUrl("/error?loginfail")
             )
@@ -99,7 +102,7 @@ public class SecurityConfig {
                 logoutConfig
                     .invalidateHttpSession(true)    // 세션 제거
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login/login")  // 로그아웃 성공시 이동할 uri
+                    .logoutSuccessUrl("/login")  // 로그아웃 성공시 이동할 uri
             )
             // 사용자 인증 처리 컴포넌트 서비스 등록
             .userDetailsService(myUserDetailsService);  // login submit 요청 => /login/login-proc 요청 => 스프링 시큐리티는 이 로직 수행 (유저 객체 생성)

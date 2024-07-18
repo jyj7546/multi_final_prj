@@ -160,7 +160,7 @@ public class MemberController {
      * 구현완료
      * 
      * 스프링 시큐리티 관련 수정
-     * login 뷰에서 submit을 통해 /login/login-proc 로 요청함
+     * login 뷰에서 submit을 통해 /login-proc 로 요청함
      * 스프링 시큐리티 설정파일 (SecurityConfig.java)에서 컨트롤(MyUserDetailsService.java) 로 대체
      * 
      * @param dto
