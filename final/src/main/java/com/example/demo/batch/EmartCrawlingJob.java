@@ -9,7 +9,6 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.enumeration.MartCd;
-import com.example.demo.service.crawling.CrawlingDBService;
 import com.example.demo.service.crawling.CrawlingLogicService;
 import com.example.demo.util.MyTimeUtil;
 

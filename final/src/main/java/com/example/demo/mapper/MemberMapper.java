@@ -16,4 +16,6 @@ public interface MemberMapper {
     MemberDTO loginMember(Map<String,Object> param);
     int deleteMember(String memId);
     String getMemberLevelByMemId(String memId);
+
+    // int insertUser(MemberJoinRequestDto memberJoinRequestDto);
 }

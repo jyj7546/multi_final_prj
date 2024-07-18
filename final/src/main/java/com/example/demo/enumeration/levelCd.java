@@ -3,13 +3,11 @@ package com.example.demo.enumeration;
 import java.util.Arrays;
 
 public enum levelCd {
-    NOUSER("nouser", "미로그인사용자"),
-    USER("user", "일반사용자"),
-    ADMIN("admin", "관리자"),
+    ZERO("0", "0레벨사용자"),
     ONE("1", "1레벨사용자"),
     TWO("2", "2레벨사용자"),
     THREE("3", "3레벨사용자"),
-    OTHRE("other", "알수없음")
+    OTHER("other", "알수없음")
     ;
 
     private final String code;
