@@ -30,7 +30,7 @@ $(document).ready(async function() {	// await 사용으로 인한 async: 비동�
 			$.ajax({
 				type: "POST",
 				// url: "/loginMember",
-				url: "/login/login-proc",	// 스프링시큐리티 로그인 처리(컨트롤러에서 처리 X)
+				url: "/login-proc",	// 스프링시큐리티 로그인 처리(컨트롤러에서 처리 X)
 				contentType: "application/json",	// data를 json 형태로 보냄
 				data: JSON.stringify(formData),	// json 으로 말음
 				success: function(response, status, xhr) {	// 응답 성공시 컨트롤러로부터 받는 값들
