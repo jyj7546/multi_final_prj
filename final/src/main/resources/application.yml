@@ -15,23 +15,21 @@ spring:
   # driver-class-name: com.mysql.cj.jdbc.Driver
   driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy  # for log4jdbc 쿼리 로그
   connection-test-query: SELECT NOW() FROM dual # for log4jdbc 쿼리 로그
-  # hikari: # log4jdbc 쿼리 테이블형식 로깅 설정
-  #  driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-  #  jdbc-url: jdbc:log4jdbc:mysql://localhost:3306/finalprojectdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
-  #  username: fullstack  # 로컬 DB USER명
-  #  password: fullstack  # 로컬 DB PASSWORD명
-  #  connection-test-query: SELECT NOW() FROM dual
  devtools:
   restart:
    enabled: true
-# 배치 관련 설정
- batch:
+ security: # 스프링 시큐리티 임시 아이디 비번
+  user:
+   name: user
+   password: user
+ batch: # 스프링 배치 관련 설정
   job:
    enabled: true
+  job-store-type: jdbc
   jdbc:
    initialize-schema: always
-# 쿼츠 관련 설정
- quartz:
+   schema: classpath:schema-mysql.sql # always옵션 주고, IF NOT EXIST 쿼리로 배치 메타데이터 테이블 생성
+ quartz: # 스프링 쿼츠 관련 설정
   job-store-type: jdbc
   jdbc:
    initialize-schema: always # 스프링 쿼츠 메타데이터 테이블 자동생성 옵션 (한 번만 하고 never로 변경하기) /
@@ -66,29 +64,6 @@ mybatis:
 # 기본 로깅 레벨 설정 => classpath:/logback-spring.xml 로 대체
 logging:
   config: classpath:logback-spring.xml
-# logging:
-#   level:
-#     root: INFO
-#     # 패키지별 로깅 레벨 설정
-#     org:
-#       apache:
-#         ibatis: INFO
-#       mybatis: INFO
-#     com:
-#       example:
-#        demo: INFO
-#       zaxxer:
-#         hikari: INFO
-#     javax:
-#       sql:
-#         DataSource: OFF
-#     jdbc: # 쿼리 로그 설정
-#       audit: OFF # JDBC 트러블슈팅 경우를 제외하고는 사용 권장 X
-#       resultset: OFF # ResultSet을 포함한 모든 JDBC 호출 정보를 출력
-#       resultsettable: INFO  # SQL 결과 데이터 Table형식으로 출력
-#       sqlonly: OFF     # SQL 로그만 출력
-#       sqltiming: INFO    # SQL + 소요시간 출력
-#       connection : OFF  # 커넥션 연결/종료 정보 출력
       
 # 크롬드라이버 경로 => WebDriverManager 라이브러리 사용하여 자동다운로드하는걸로 변경
 # webdriver-path:

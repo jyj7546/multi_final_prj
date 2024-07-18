@@ -5,18 +5,54 @@ $(document).ready(async function() {
     const module = await import('./common.js');
     const myModule = module.default;
 
-	$("#form_s1").submit(function(event){
+	// $("#form_s1").submit(function(event){
+	$("#form-signin").submit(function(event){
 	    event.preventDefault();
 
-		// 컨트롤러로 보낼 form 데이터 값 가져옴 
-			// => @RequestBody MemberDTO dto에 자동 매핑되게끔 MemberDTO 파일 변수와 변수명을 동일하게 맞춤
+			// 컨트롤러로 보낼 form 데이터 값 가져옴 
+			// => @RequestBody MemberDTO dto에 자동 매핑되게끔 MemberDTO 파일 변수와 변수명을 동일하게 맞춤			
+			
 			let formData = {
-				memId: $("#memId_s").val().replace(/(^\s*)|(\s*$)/g, ""),	// 공백 제거 정규식
+				memId: $("#memId_s").val().replace(/(^\s*)|(\s*$)/g, ""),
 				pw: $("#pw_s").val().replace(/(^\s*)|(\s*$)/g, ""),
 				name: $("#name_s").val().replace(/(^\s*)|(\s*$)/g, ""),
-				// birth:
 				email: $("#email_s").val().replace(/(^\s*)|(\s*$)/g, "")
 			};
+
+			// 관리자 아이디 제한
+			let noId = /^admin/i;	// 대소문자 구분 없이 'admin'으로 시작하는지 확인
+			if(noId.test(formData.memId)) {
+				// memId = memId.replace(replaceId, "");
+				document.getElementById('p1_s').innerHTML = "admin은 아이디에 포함될 수 없습니다.";	
+				$('#p1_s').text("admin은 아이디에 포함될 수 없습니다."); 
+			} else {
+				// event.target.submit();
+				// form 데이터를 ajax로 컨트롤러(MemberController.java insertMember 메소드)로 전달
+				$.ajax({
+					type: "POST",
+					// url: "/insertMember",
+					url: "/login/join",	// 회원가입 처리 컨트롤러 호출
+					contentType: "application/json",	// data는 JSON형태로 보냄
+					data: JSON.stringify(formData),
+					// 성공 실패 분기
+					success: function(response, status, xhr) {
+						// window.location.href = "login.html";
+						alert(response);	// 서버로부터 응답 메세지 받아 출력
+						if(xhr.status == 201) {
+							myModule.sectionChg("login/login");	// 회원가입 성공 시 로그인 페이지로 이동
+						} else {
+							alert("예외. xhr.status: " + xhr.status);
+							console.log("예외. xhr.responseText: " + xhr.responseText);
+						}
+					},
+					error: function(xhr, status, error) {
+						alert("회원가입 실패. xhr.status: " + xhr.status);
+						console.log("회원가입 실패. xhr.responseText: " + xhr.responseText);
+						window.location.href = "/error";
+					}
+				});
+			}
+			
 			
 
 		//입력값 유효성 검사를 위한 정규 표현식을 정의
@@ -47,10 +83,6 @@ $(document).ready(async function() {
 
 
 
-
-
-
-
 		// 빠른 테스트를 위해 아래 정규식 체크는 임시 주석처리함
 		// if(id_Regex.test(formData.id)) {
 		// 	check_id = 1;
@@ -63,34 +95,6 @@ $(document).ready(async function() {
 		// if(check_email*check_name == 1){
 			
 
-	        // event.target.submit();
-			// form 데이터를 ajax로 컨트롤러(MemberController.java insertMember 메소드)로 전달
-			$.ajax({
-				type: "POST",
-				url: "/insertMember",
-				contentType: "application/json",	// data는 JSON형태로 보냄
-				data: JSON.stringify(formData),
-				success: function(response, status, xhr) {
-					// window.location.href = "login.html";
-					alert(response);	// 서버로부터 응답 메세지 받아 출력
-					if(xhr.status == 201) {
-						myModule.sectionChg("login");	// 회원가입 성공 시 로그인 페이지로 이동
-					} else {
-						alert("예외. xhr.status: " + xhr.status);
-						console.log("예외. xhr.responseText: " + xhr.responseText);
-					}
-				},
-				error: function(xhr, status, error) {
-					alert("회원가입 실패. xhr.status: " + xhr.status);
-					console.log("회원가입 실패. xhr.responseText: " + xhr.responseText);
-					window.location.href = "/error";
-				}
-			});
-	    
-		
-		
-			
-		
 		
 		// } else {
 			 // 하나 이상의 입력값이 유효하지 않은 경우, 사용자에게 알림

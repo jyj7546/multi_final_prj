@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.demo.dto.MemberDTO;
 import com.example.demo.service.MemberService;
 import com.example.demo.status.StatusMsg;
-import com.example.demo.userannotation.CheckRole;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -104,6 +105,9 @@ public class MemberController {
     /**
      * 회원가입
      * 구현완료
+     * 
+     * 스프링 시큐리티 회원가입으로 대체됨
+     * 
      * @param dto
      * @return
      */
@@ -122,37 +126,72 @@ public class MemberController {
     }
 
     /**
-     * 로그인
+     * 회원가입 처리(+비번 암호화)
+     * @param dto
+     * @return
+     */
+    @PostMapping("/login/join")
+    public String joinMember(Model model, @ModelAttribute MemberDTO dto) {    // dto: jsp(view)로부터 전달받은 데이터(회원가입 form 데이터 @RequestBody어노테이션 사용으로 MemberDTO 타입으로 자동매핑됨. 대신 DTO 변수명과 jsp파일 동일해야 함)
+        // int result = myUserDetailsService.insertUser(requestDto);
+        int result = memberService.insertMember(dto);
+
+        Map<String, Object> param = new HashMap<>();
+ 
+        if(result > 0) {    // 인서트 성공시 1 리턴됨
+            log.debug("DB INSERT SUCCESS");
+            param.clear();
+            param.put("httpStatus", HttpStatus.CREATED);
+            param.put("httpStatusMsg", StatusMsg.USER_JOIN_SUCC);
+        } else {
+            log.error("DB INSERT FAIL");
+            param.clear();
+            param.put("httpStatus", HttpStatus.INTERNAL_SERVER_ERROR);
+            param.put("httpStatusMsg", StatusMsg.USER_JOIN_FAIL);
+        }
+
+        model.addAttribute("httpStatus", param);
+        model.addAttribute("memId", dto.getMemId());
+
+        return "login/login";   // 성공시 로그인 페이지로 이동
+    }
+
+    /**
+     * 로그인 시도 시, DB확인하여 존재하면 해당 정보로 Member 객체 생성
      * 구현완료
+     * 
+     * 스프링 시큐리티 관련 수정
+     * login 뷰에서 submit을 통해 /login/login-proc 로 요청함
+     * 스프링 시큐리티 설정파일 (SecurityConfig.java)에서 컨트롤(MyUserDetailsService.java) 로 대체
+     * 
      * @param dto
      * @param request
      * @return
      */
-    @CheckRole  // 권한 체크 어노테이션 (메소드 실행 직후 인터셉터)
-    @PostMapping("loginMember")
-    @ResponseBody
-    public ResponseEntity<Object> loginMember(@RequestBody MemberDTO dto, HttpServletRequest request) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("memId", dto.getMemId());
-        param.put("pw", dto.getPw());
-        String status = memberService.loginMember(param);
+    // @CheckRole  // 권한 체크 어노테이션 (메소드 실행 직후 인터셉터)
+    // @PostMapping("loginMember")
+    // @ResponseBody
+    // public ResponseEntity<Object> loginMember(@RequestBody MemberDTO dto, HttpServletRequest request) {
+    //     Map<String, Object> param = new HashMap<>();
+    //     param.put("memId", dto.getMemId());
+    //     param.put("pw", dto.getPw());
+    //     String status = memberService.loginMember(param);
 
-        if(status.equals(StatusMsg.USER_LOGIN_SUCC)) {  // 로그인 성공
-            // 세션 저장 직후 인터셉터로 권한 체크
-            HttpSession session = request.getSession(true); // true: 세션 있어도 새로 생성
-            session.setAttribute(sessionMemId, dto.getMemId());
-            log.debug("USER SESSION ===>\t{}",session.getAttribute(sessionMemId));
+    //     if(status.equals(StatusMsg.USER_LOGIN_SUCC)) {  // 로그인 성공
+    //         // 세션 저장 직후 인터셉터로 권한 체크
+    //         HttpSession session = request.getSession(true); // true: 세션 있어도 새로 생성
+    //         session.setAttribute(sessionMemId, dto.getMemId());
+    //         log.debug("USER SESSION ===>\t{}",session.getAttribute(sessionMemId));
 
-            return new ResponseEntity<Object>(StatusMsg.USER_JOIN_SUCC, HttpStatus.OK);
-        } else if(status.equals(StatusMsg.USER_LOGIN_FAIL_NO_EXISTS)) { // 미존재 회원
+    //         return new ResponseEntity<Object>(StatusMsg.USER_JOIN_SUCC, HttpStatus.OK);
+    //     } else if(status.equals(StatusMsg.USER_LOGIN_FAIL_NO_EXISTS)) { // 미존재 회원
 
-            return new ResponseEntity<Object>(StatusMsg.USER_LOGIN_FAIL_NO_EXISTS, HttpStatus.NO_CONTENT);
-        } else if(status.equals(StatusMsg.USER_LOGIN_FAIL_PW)) {    // 비밀번호 틀림
-            return new ResponseEntity<Object>(StatusMsg.USER_LOGIN_FAIL_NO_EXISTS, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
-        } else {    // 나머지 상태 => 오류로 간주
-            return new ResponseEntity<Object>(StatusMsg.USER_JOIN_FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    //         return new ResponseEntity<Object>(StatusMsg.USER_LOGIN_FAIL_NO_EXISTS, HttpStatus.NO_CONTENT);
+    //     } else if(status.equals(StatusMsg.USER_LOGIN_FAIL_PW)) {    // 비밀번호 틀림
+    //         return new ResponseEntity<Object>(StatusMsg.USER_LOGIN_FAIL_NO_EXISTS, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+    //     } else {    // 나머지 상태 => 오류로 간주
+    //         return new ResponseEntity<Object>(StatusMsg.USER_JOIN_FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
 
     /**
      * 클라이언트 세션 요청 처리
@@ -175,18 +214,21 @@ public class MemberController {
     /**
      * 로그아웃
      * 구현완료
+     * 
+     * 스프링 시큐리티 로그아웃 설정에서 대신 처리
+     * 
      * @param request
      * @return
      */
-    @GetMapping("logoutMember")
-    public String logoutMember(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);    // getSession(false): 세션 존재시 리턴, 없으면 생성X and null 리턴
-        if(session != null) {   // 세션 null이 아닌 경우에만
-            session.invalidate();   // 세션 초기화
-        }
+    // @GetMapping("logout")
+    // public String logoutMember(HttpServletRequest request) {
+    //     HttpSession session = request.getSession(false);    // getSession(false): 세션 존재시 리턴, 없으면 생성X and null 리턴
+    //     if(session != null) {   // 세션 null이 아닌 경우에만
+    //         session.invalidate();   // 세션 초기화
+    //     }
         
-        return "login"; // 로그인 페이지로 이동
-    }
+    //     return "login/login"; // 로그인 페이지로 이동
+    // }
 
     /**
      * 회원탈퇴
